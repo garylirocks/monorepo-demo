@@ -1,0 +1,18 @@
+image: node:10.15.3
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - node
+
+        script:
+          - npm install
+          - npm test
+          - pipe: microsoft/azure-storage-deploy:2.0.1
+            variables:
+              SOURCE: 'mydirectory'
+              DESTINATION: 'https://mystorageaccount.blob.core.windows.net/mycontainer/mydirectory'
+              DESTINATION_SAS_TOKEN: $AZURE_STORAGE_SAS_TOKEN
+              EXTRA_ARGS: '--overwrite=false'
+              DEBUG: 'true'
